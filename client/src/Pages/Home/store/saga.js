@@ -4,8 +4,7 @@ import {
   CREATE_DEVICE,
   UPDATE_DEVICE,
   DEL_DEVICE,
-  GET_DETAIL_DEVICE,
-  GET_RFID
+  GET_DETAIL_DEVICE
 } from "./contants";
 import {
   getDevices,

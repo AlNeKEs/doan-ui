@@ -6,8 +6,7 @@ import {
   DEL_DEVICE,
   CREATE_DEVICE,
   GET_DETAIL_DEVICE,
-  SAVE_DETAIL,
-  GET_RFID
+  SAVE_DETAIL
 } from "./contants";
 export const setLoading = (payload) => {
   return {
