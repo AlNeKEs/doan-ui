@@ -1,0 +1,19 @@
+.content{
+    margin:auto
+}
+.tool{
+    width: 100%;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(10,94,243);
+    position: sticky;
+    top: 100px;
+    left: 0;
+    right: 0;
+    z-index: 5;
+}
+.tool button{
+    margin-left: 5px;
+}
