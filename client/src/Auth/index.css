@@ -1,0 +1,7 @@
+.loading{
+    width: 100vw;
+    height: 100vh;
+    line-height: 100vh;
+  padding: 30px 50px;
+  text-align: center;
+}

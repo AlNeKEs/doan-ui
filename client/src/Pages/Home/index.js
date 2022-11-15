@@ -34,7 +34,7 @@ import {
 import { Space, Button, notification } from "antd";
 const Home = (props) => {
   const navigate = useNavigate();
-  const { getDetail, createDevice, updateDevice, deleteDevice, devices } =
+  const { getDetail, createDevice, updateDevice, deleteDevice, devices, getAllDevices } =
     props;
   const columns = [
     {
@@ -281,7 +281,7 @@ const Home = (props) => {
     const params = {
       searchValue: searchValue,
     };
-    props.getAllDevices(params);
+    getAllDevices(params);
   }, [searchStatus, isSubmit]);
 
   //pagnigation
@@ -410,10 +410,8 @@ const Home = (props) => {
             name="rfidId"
             rules={[
               { required: true, message: "Please input RFID tag!" },
-              { min: 5, message: "Minimum 5 characters" },
               {
-                type: "regexp",
-                pattern: new RegExp("^[A-Za-z0-9]{5,}$"),
+                pattern: new RegExp("^([a-zA-Z0-9]{2}\\s{0,1}){4,7}$"), //eslint-disable-line
                 message: "Error",
               },
             ]}

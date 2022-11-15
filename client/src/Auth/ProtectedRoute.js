@@ -2,21 +2,31 @@ import { Navigate } from "react-router-dom";
 import React from "react";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
-import {Spin} from "antd";
+import { Spin } from "antd";
 import Header from "../Pages/Header";
-const ProtectedRoute = ({children}) => {
+import "./index.css";
+const ProtectedRoute = ({ children }) => {
   const {
     authState: { authLoading, isAuthenticated },
   } = useContext(AuthContext);
   if (authLoading) {
     return (
-      <Spin />
+      <div className="loading">
+        <Spin />
+      </div>
     );
   }
-  console.log(isAuthenticated)
+  console.log(isAuthenticated);
   return (
     <>
-      {isAuthenticated ? <><Header/>{children} </> : <Navigate to = "/login"/>}
+      {isAuthenticated ? (
+        <>
+          <Header />
+          {children}
+        </>
+      ) : (
+        <Navigate to="/login" />
+      )}
     </>
   );
 };

@@ -153,7 +153,7 @@ const ScanPage = (props) => {
         <Table
           columns={columns}
           dataSource={listDevices}
-          //loading={props.isLoading}
+          //loading={props.isLoading} 
           onChange={onChange}
           rowClassName={(record) => (record._id ? "row-green" : "row-red")}
         />
