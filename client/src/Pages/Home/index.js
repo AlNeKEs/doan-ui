@@ -1,5 +1,13 @@
 import React from "react";
-import { Table, Input, Modal, Form, Select, DatePicker } from "antd";
+import {
+  Table,
+  Input,
+  Modal,
+  Form,
+  Select,
+  DatePicker,
+  Popconfirm,
+} from "antd";
 import { useState, useEffect } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
@@ -23,7 +31,7 @@ import {
   SmileOutlined,
 } from "@ant-design/icons";
 
-import { Space, Button, notification} from "antd";
+import { Space, Button, notification } from "antd";
 const Home = (props) => {
   const navigate = useNavigate();
   const { getDetail, createDevice, updateDevice, deleteDevice, devices } =
@@ -48,11 +56,14 @@ const Home = (props) => {
       title: "RFID Tag",
       dataIndex: "rfidId",
       key: "rfidId",
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a.rfidId.localeCompare(b.rfidId),
     },
     {
       title: "Device Name",
       dataIndex: "deviceName",
       key: "deviceName",
+      sorter: (a, b) => a.deviceName.localeCompare(b.deviceName),
     },
     {
       title: "Type",
@@ -82,6 +93,7 @@ const Home = (props) => {
       key: "exp",
       render: (text, record) =>
         text ? moment(text).format(dateFormat) : "date",
+      sorter: (a, b) => moment(a.exp).unix() - moment(b.exp).unix(),
     },
     {
       title: "Create date",
@@ -89,6 +101,7 @@ const Home = (props) => {
       key: "createAt",
       render: (text, record) =>
         text ? moment(text).format(dateFormat) : "date",
+      sorter: (a, b) => moment(a.createAt).unix() - moment(b.createAt).unix(),
     },
     {
       title: "Date Modified",
@@ -96,6 +109,8 @@ const Home = (props) => {
       key: "dateModified",
       render: (text, record) =>
         text ? moment(text).format(dateFormat) : "date",
+      sorter: (a, b) =>
+        moment(a.dateModified).unix() - moment(b.dateModified).unix(),
     },
     {
       title: "Action",
@@ -108,12 +123,20 @@ const Home = (props) => {
           >
             <EditOutlined />
           </Button>
-          <Button
-            style={{ backgroundColor: "RGB(10, 94, 243)", color: "white" }}
-            onClick={() => delDevice(record._id)}
+          <Popconfirm
+            title="Are you sure to delete this device?"
+            onConfirm={()=> confirmDelete(record._id)}
+            okText="Yes"
+            cancelText="No"
           >
-            <DeleteOutlined />
-          </Button>
+            {" "}
+            <Button
+              style={{ backgroundColor: "RGB(10, 94, 243)", color: "white" }}
+              // onClick={() => delDevice(record._id)}
+            >
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -123,12 +146,14 @@ const Home = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const [searchStatus, setSearchStatus] = useState(false);
   const handleChangeSearch = (e) => {
-    setSearchValue(e.target.value);
+    setSearchValue(e.target.value.trim());
   };
   const handleSearch = (e) => {
     setSearchStatus(!searchStatus);
   };
 
+  //get current date
+  const now = moment();
   // create and update
   //modal
   const dateFormat = "DD/MM/YYYY";
@@ -138,6 +163,8 @@ const Home = (props) => {
   const [formModal] = Form.useForm();
   const [createBtn, setCreateBtn] = useState(true);
   const [rfidDisable, setRfidDisable] = useState(false);
+
+  //open modal when click Create button
   const showModal = () => {
     setOpen(true);
     formModal.resetFields();
@@ -145,6 +172,7 @@ const Home = (props) => {
     setRfidDisable(false);
     setIsConnect(true);
   };
+  //close model
   const handleCancel = () => {
     setOpen(false);
     setCreateBtn(true);
@@ -220,6 +248,9 @@ const Home = (props) => {
   };
 
   //delete device
+  const confirmDelete = (id)=>{
+    delDevice(id);
+  }
   const delDevice = async (id) => {
     const res = await deleteDevice(id);
     if (res.success) {
@@ -334,6 +365,12 @@ const Home = (props) => {
           dataSource={props.devices}
           loading={props.isLoading}
           onChange={onChange}
+          rowClassName={(record) => {
+            if (!now.isBefore(record.exp)) return "row-red";
+            else if (moment(record.exp).diff(moment(now), "days") <= 10) {
+              return "row-yellow";
+            } else return " ";
+          }}
         />
       </div>
 
@@ -374,9 +411,14 @@ const Home = (props) => {
             rules={[
               { required: true, message: "Please input RFID tag!" },
               { min: 5, message: "Minimum 5 characters" },
+              {
+                type: "regexp",
+                pattern: new RegExp("^[A-Za-z0-9]{5,}$"),
+                message: "Error",
+              },
             ]}
           >
-            <Input disabled = {rfidDisable}/>
+            <Input disabled={rfidDisable} />
           </Form.Item>
           <Form.Item
             label="Device Name"

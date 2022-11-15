@@ -6,6 +6,10 @@
     background-color: #009944;
     color: white;
 }
+.row-yellow{
+    background-color: #f7b217;
+    color: white
+}
 .ant-table-tbody>tr.ant-table-row:hover>td{
     background-color: unset;
 }

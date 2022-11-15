@@ -21,7 +21,7 @@ function* getDeviceSaga({ payload }) {
     const response = yield call(getDevices, payload);
     yield all([put(setLoading(false)), put(saveDevice(response))]);
   } catch (e) {
-    yield put(setLoading(false));
+    yield put(setLoading(false)); 
   }
 }
 

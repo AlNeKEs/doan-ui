@@ -48,12 +48,13 @@ const Login = () => {
       </Alert>
       <div className="login-form">
         <div className="login-form-intro">
-          <div>
-            <h2>ĐỒ ÁN TỐT NGHIỆP</h2>
-            <h3 >
-              Ứng dụng quản lí thông tin thiết bị với công nghệ RFID trên hệ
+          <div className ="login-form-title">
+            <h2 style={{color: "white"}}>ĐỒ ÁN TỐT NGHIỆP</h2>
+            <p >
+              Ứng dụng quản lý thông tin thiết bị với công nghệ RFID trên hệ
               thống MongoDB
-            </h3>
+            </p>
+            <p>GIẢNG VIÊN HƯỚNG DẪN: ThS. Trương Bá Phúc</p>
           </div>
         </div>
         <div className=" login-form-panel">
