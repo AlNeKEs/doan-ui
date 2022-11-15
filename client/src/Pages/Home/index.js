@@ -208,7 +208,7 @@ const Home = (props) => {
         openNotification("Failed", `RFID card already exist`, false);
       } else {
         const params = {
-          rfidId: values.rfidId,
+          rfidId: values.rfidId.toUpperCase(),
           deviceName: values.deviceName,
           type: values.type,
           deviceModel: values.deviceModel,
@@ -412,7 +412,7 @@ const Home = (props) => {
               { required: true, message: "Please input RFID tag!" },
               {
                 pattern: new RegExp("^([a-zA-Z0-9]{2}\\s{0,1}){4,7}$"), //eslint-disable-line
-                message: "Error",
+                message: "format error( eg: AB 5D 4S 9D)",
               },
             ]}
           >
