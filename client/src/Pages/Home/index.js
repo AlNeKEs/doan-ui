@@ -96,7 +96,7 @@ const Home = (props) => {
       sorter: (a, b) => moment(a.exp).unix() - moment(b.exp).unix(),
     },
     {
-      title: "Create date",
+      title: "Date Added",
       dataIndex: "createAt",
       key: "createAt",
       render: (text, record) =>

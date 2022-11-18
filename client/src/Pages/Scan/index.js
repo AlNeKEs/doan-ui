@@ -65,7 +65,7 @@ const ScanPage = (props) => {
         text ? moment(text).format(dateFormat) : "date",
     },
     {
-      title: "Create date",
+      title: "Date Added",
       dataIndex: "createAt",
       key: "createAt",
       render: (text, record) =>
