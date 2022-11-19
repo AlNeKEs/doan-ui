@@ -29,7 +29,7 @@ const Header = (props) => {
   const logout = () => logoutUser();
 
   const { Option } = Select;
-
+  const [formCreateUser] = Form.useForm();
   //notification
   const openNotification = (title, content, icon) => {
     notification.open({
@@ -46,6 +46,7 @@ const Header = (props) => {
   const [showModal, setShowModal] = useState(false);
   const openModal = () => {
     setShowModal(true);
+    formCreateUser.resetFields();
   };
   const items = [
     {
@@ -99,6 +100,7 @@ const Header = (props) => {
     const res = await createUser(params);
     if (res.success) {
       openNotification("Success", res.message, true);
+      setShowModal(false)
     } else {
       openNotification("Failed", res.message, false);
     }
@@ -130,7 +132,7 @@ const Header = (props) => {
         onCancel={handleCancel}
         style={{ top: 20 }}
         footer={
-          <Button type="primary" htmlType="submit" form="formModal">
+          <Button type="primary" htmlType="submit" form="formCreateUser">
             Create User
           </Button>
         }
@@ -146,8 +148,9 @@ const Header = (props) => {
             remember: true,
           }}
           onFinish={onFinishCreateUser}
+          form = {formCreateUser}
+          name="formCreateUser"
           autoComplete="off"
-          name="formModal"
         >
           <Form.Item
             label="Username"

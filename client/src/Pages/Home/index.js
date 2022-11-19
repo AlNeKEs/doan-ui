@@ -204,9 +204,6 @@ const Home = (props) => {
   //submit data create or update
   const onFinish = async (values) => {
     if (!values.id) {
-      if (devices.find((device) => device.rfidId === values.rfidId)) {
-        openNotification("Failed", `RFID card already exist`, false);
-      } else {
         const params = {
           rfidId: values.rfidId.toUpperCase(),
           deviceName: values.deviceName,
@@ -218,11 +215,10 @@ const Home = (props) => {
         };
         const res = await createDevice(params);
         if (res.success) {
-          openNotification("Success", `Create ${res.message}`, true);
+          openNotification("Success", res.message, true);
         } else {
-          openNotification("Failed", `Create ${res.message}`, false);
+          openNotification("Failed", res.message, false);
         }
-      }
     } else {
       const params = {
         id: values.id,
@@ -237,9 +233,9 @@ const Home = (props) => {
       };
       const res = await updateDevice(params);
       if (res.success) {
-        openNotification("Success", `Update ${res.message}`, true);
+        openNotification("Success", res.message, true);
       } else {
-        openNotification("Failed", `Update ${res.message}`, false);
+        openNotification("Failed", res.message, false);
       }
     }
     setSubmit(!isSubmit);
