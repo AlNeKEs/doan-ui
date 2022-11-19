@@ -16,4 +16,14 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    background-color: unset;
+    color: black;
+    border: none;
+    box-shadow: none;
+}
+.header-btn:hover{
+    background-color: unset;
+    color: black;
+    border: none;
+    box-shadow: none;
 }

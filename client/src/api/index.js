@@ -5,6 +5,9 @@ export const authLogin = (payload) =>
 export const authUser = () =>
   axios.get(`${process.env.REACT_APP_API}/api/auth`);
 
+export const registerUser = (payload) =>
+  axios.post(`${process.env.REACT_APP_API}/api/auth/register`, payload);
+
 //device
 export const getDevices = (payload) =>
   axios.post(`${process.env.REACT_APP_API}/api/device/getDevice`, payload);
@@ -16,3 +19,4 @@ export const delDevice = (deviceID) =>
   axios.delete(`${process.env.REACT_APP_API}/api/device/delete/${deviceID}`);
 export const getDetailDevice = (deviceID) =>
   axios.get(`${process.env.REACT_APP_API}/api/device/getDetail/${deviceID}`);
+
