@@ -80,17 +80,14 @@ const Header = (props) => {
     password: "",
     confirmPassword: "",
   });
-  const [confirmAlert, setConfirmAlert] = useState("");
   const onChangeRegister = (e) => {
     setRegister({ ...register, [e.target.name]: e.target.value });
   };
   const handleCancel = () => {
     setShowModal(false);
   };
-  const onFinish = async(values) => {
+  const onFinishCreateUser = async(values) => {
     if (register.password !== register.confirmPassword) {
-      setConfirmAlert("Password don't match!");
-      console.log(confirmAlert);
       openNotification("error", "password do not match!", false);
       return;
     }
@@ -99,9 +96,7 @@ const Header = (props) => {
       password: values.password,
       role: values.role,
     };
-    console.log(params);
     const res = await createUser(params);
-    console.log(res)
     if (res.success) {
       openNotification("Success", res.message, true);
     } else {
@@ -150,7 +145,7 @@ const Header = (props) => {
           initialValues={{
             remember: true,
           }}
-          onFinish={onFinish}
+          onFinish={onFinishCreateUser}
           autoComplete="off"
           name="formModal"
         >

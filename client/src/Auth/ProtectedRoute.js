@@ -16,7 +16,6 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-  console.log(isAuthenticated);
   return (
     <>
       {isAuthenticated ? (

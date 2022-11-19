@@ -9,19 +9,18 @@ export const setLoading = (payload) => {
   };
 };
 
-export const createUser = (payload, resolve, reject) => {
+export const createUser = (payload, resolve) => {
   return {
     type: CREATE_USER,
     payload,
-    resolve, 
-    reject
+    resolve
   };
 };
 
 export function asyncCreateUserAction(dispatch) {
   return function returnAsync(payload) {
-      return new Promise((resolve, reject) =>
-          dispatch(createUser(payload, resolve, reject))
+      return new Promise((resolve) =>
+          dispatch(createUser(payload, resolve))
       );
   };
 }

@@ -20,7 +20,6 @@ const AuthContextProvider = ({ children }) => {
     }
     try {
       const response = await authUser();
-      console.log(response);
       if (response.data.success) {
         dispatch({
           type: "SET_AUTH",
@@ -64,10 +63,9 @@ const AuthContextProvider = ({ children }) => {
           },
         });
         setAuthToken(response.data.accessToken);
-        console.log(dispatch.payload.user);
         return response.data;
       }else{
-        console.log(response)
+        return response.data;
       }
     } catch (err) {
       if (err.response.data) return err.response.data;

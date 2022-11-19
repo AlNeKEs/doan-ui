@@ -29,8 +29,6 @@ const Login = () => {
     try {
       const loginData = await loginUser(loginForm);
       if (loginData.success) {
-        //navigate('/dashboard');
-        console.log(loginData);
       } else {
         setAlert({ type: "danger", message: loginData.message });
         setTimeout(() => {
