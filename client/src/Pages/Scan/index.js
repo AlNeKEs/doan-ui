@@ -1,5 +1,7 @@
 import React from "react";
-import { Table } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
+import { Table, notification } from "antd";
+import { Excel } from "antd-table-saveas-excel";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -129,18 +131,113 @@ const ScanPage = (props) => {
     };
     scanDevices();
   }, [isScan]);
-  const clearBtn = ()=>{
+  const clearBtn = () => {
     setListDevices([]);
-    setIsScan(!isScan)
-  }
+    setIsScan(!isScan);
+  };
+
+  // export excel
+  const now = moment();
+  //notification
+  const openNotification = (title, content, icon) => {
+    notification.open({
+      message: title,
+      description: content,
+      icon: <SmileOutlined style={{ color: "red" }} />,
+    });
+  };
+  const exportColumns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "RFID Tag",
+      dataIndex: "rfidId",
+      key: "rfidId",
+    },
+    {
+      title: "Device Name",
+      dataIndex: "deviceName",
+      key: "deviceName",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Model",
+      dataIndex: "deviceModel",
+      key: "deviceModel",
+    },
+    {
+      title: "Manufactor",
+      dataIndex: "manufactor",
+      key: "manufactor",
+    },
+    {
+      title: "Manufacturing Date",
+      dataIndex: "mfg",
+      key: "mfg",
+    },
+    {
+      title: "Expiry date",
+      dataIndex: "exp",
+      key: "exp",
+    },
+    {
+      title: "Date Added",
+      dataIndex: "createAt",
+      key: "createAt",
+    },
+    {
+      title: "Date Modified",
+      dataIndex: "dateModified",
+      key: "dateModified",
+    },
+  ];
+  const exportScan = () => {
+    const excel = new Excel();
+    let data = [];
+    if (!listDevices[0]) openNotification("Failed", "Nothing to export", false);
+    else {
+      listDevices.forEach((device, index) => {
+        data.push({
+          id: index + 1,
+          rfidId: device.rfidId,
+          deviceName: device.deviceName,
+          deviceModel: device.deviceModel,
+          type: device.type,
+          manufactor: device.manufactor,
+          mfg: moment(device.mfg).format(dateFormat),
+          exp: moment(device.exp).format(dateFormat),
+          createAt: moment(device.createAt).format(dateFormat),
+          dateModified: moment(device.dateModified).format(dateFormat),
+        });
+      });
+      excel
+        .addSheet("All Devices")
+        .addColumns(exportColumns)
+        .addDataSource(data)
+        .saveAs(`device_scan_${moment(now).format("DD_MM_YYYY")}.xlsx`);
+    }
+  };
   return (
     <div>
-      <div className="tool" >
+      <div className="tool">
         <Button
           style={{ backgroundColor: "#62aeff", color: "white", float: "right" }}
           onClick={dashboardBtn}
         >
           Dashboard
+        </Button>
+        <Button
+          style={{ backgroundColor: "#62aeff", color: "white", float: "right" }}
+          onClick={exportScan}
+        >
+          Export
         </Button>
         <Button
           style={{ backgroundColor: "#cf000f", color: "white", float: "right" }}
@@ -153,7 +250,7 @@ const ScanPage = (props) => {
         <Table
           columns={columns}
           dataSource={listDevices}
-          //loading={props.isLoading} 
+          //loading={props.isLoading}
           onChange={onChange}
           rowClassName={(record) => (record._id ? "row-green" : "row-red")}
         />
