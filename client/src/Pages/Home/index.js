@@ -518,11 +518,12 @@ const Home = (props) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item label="Type" name="type" initialValue="Điện tử">
+          <Form.Item label="Type" name="type" initialValue="Văn phòng">
             <Select>
-              <Option value={"Điện tử"}>Điện tử</Option>
+              <Option value={"Văn phòng"}>Văn phòng</Option>
+              <Option value={"Chiếu sáng"}>Chiếu sáng</Option>
               <Option value={"Điện lạnh"}>Điện lạnh</Option>
-              <Option value={"Gia dụng"}>Gia dụng</Option>
+              <Option value={"Truyền thông"}>Truyền thông</Option>
             </Select>
           </Form.Item>
           <Form.Item
