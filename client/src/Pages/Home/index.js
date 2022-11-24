@@ -8,6 +8,7 @@ import {
   DatePicker,
   Popconfirm,
 } from "antd";
+import { Excel } from "antd-table-saveas-excel";
 import { useState, useEffect } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
@@ -34,8 +35,14 @@ import {
 import { Space, Button, notification } from "antd";
 const Home = (props) => {
   const navigate = useNavigate();
-  const { getDetail, createDevice, updateDevice, deleteDevice, devices, getAllDevices } =
-    props;
+  const {
+    getDetail,
+    createDevice,
+    updateDevice,
+    deleteDevice,
+    devices,
+    getAllDevices,
+  } = props;
   const columns = [
     {
       title: "ID",
@@ -125,7 +132,7 @@ const Home = (props) => {
           </Button>
           <Popconfirm
             title="Are you sure to delete this device?"
-            onConfirm={()=> confirmDelete(record._id)}
+            onConfirm={() => confirmDelete(record._id)}
             okText="Yes"
             cancelText="No"
           >
@@ -204,21 +211,21 @@ const Home = (props) => {
   //submit data create or update
   const onFinish = async (values) => {
     if (!values.id) {
-        const params = {
-          rfidId: values.rfidId.toUpperCase(),
-          deviceName: values.deviceName,
-          type: values.type,
-          deviceModel: values.deviceModel,
-          manufactor: values.manufactor,
-          exp: values.exp,
-          mfg: values.mfg,
-        };
-        const res = await createDevice(params);
-        if (res.success) {
-          openNotification("Success", res.message, true);
-        } else {
-          openNotification("Failed", res.message, false);
-        }
+      const params = {
+        rfidId: values.rfidId.toUpperCase(),
+        deviceName: values.deviceName,
+        type: values.type,
+        deviceModel: values.deviceModel,
+        manufactor: values.manufactor,
+        exp: values.exp,
+        mfg: values.mfg,
+      };
+      const res = await createDevice(params);
+      if (res.success) {
+        openNotification("Success", res.message, true);
+      } else {
+        openNotification("Failed", res.message, false);
+      }
     } else {
       const params = {
         id: values.id,
@@ -244,9 +251,9 @@ const Home = (props) => {
   };
 
   //delete device
-  const confirmDelete = (id)=>{
+  const confirmDelete = (id) => {
     delDevice(id);
-  }
+  };
   const delDevice = async (id) => {
     const res = await deleteDevice(id);
     if (res.success) {
@@ -316,6 +323,83 @@ const Home = (props) => {
     navigate("/scan");
   };
 
+  // export excel
+  const exportColumns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "RFID Tag",
+      dataIndex: "rfidId",
+      key: "rfidId",
+    },
+    {
+      title: "Device Name",
+      dataIndex: "deviceName",
+      key: "deviceName",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Model",
+      dataIndex: "deviceModel",
+      key: "deviceModel",
+    },
+    {
+      title: "Manufactor",
+      dataIndex: "manufactor",
+      key: "manufactor",
+    },
+    {
+      title: "Manufacturing Date",
+      dataIndex: "mfg",
+      key: "mfg",
+    },
+    {
+      title: "Expiry date",
+      dataIndex: "exp",
+      key: "exp",
+    },
+    {
+      title: "Date Added",
+      dataIndex: "createAt",
+      key: "createAt",
+    },
+    {
+      title: "Date Modified",
+      dataIndex: "dateModified",
+      key: "dateModified",
+    },
+  ];
+  const handleExport = () => {
+    const excel = new Excel();
+    let data = [];
+    devices.forEach((device, index) => {
+      data.push({
+        id: index + 1,
+        rfidId: device.rfidId,
+        deviceName: device.deviceName,
+        deviceModel: device.deviceModel,
+        type: device.type,
+        manufactor: device.manufactor,
+        mfg: moment(device.mfg).format(dateFormat),
+        exp: moment(device.exp).format(dateFormat),
+        createAt: moment(device.createAt).format(dateFormat),
+        dateModified: moment(device.dateModified).format(dateFormat),
+      });
+    });
+    excel
+      .addSheet("All Devices")
+      .addColumns(exportColumns)
+      .addDataSource(data)
+      .saveAs(`device_${moment(now).format("DD_MM_YYYY")}.xlsx`);
+  };
+
   return (
     <div>
       <div className="tool">
@@ -352,6 +436,16 @@ const Home = (props) => {
             onClick={scanDevice}
           >
             Scan
+          </Button>
+          <Button
+            style={{
+              backgroundColor: "#62aeff",
+              color: "white",
+              float: "right",
+            }}
+            onClick={handleExport}
+          >
+            Export
           </Button>
         </div>
       </div>
