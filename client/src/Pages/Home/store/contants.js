@@ -7,6 +7,7 @@ const UPDATE_DEVICE = `${NS_DEVICE}/updateDevice`;
 const DEL_DEVICE = `${NS_DEVICE}/deleteDevice`;
 const GET_DETAIL_DEVICE = `${NS_DEVICE}/getDetailDevice`;
 const SAVE_DETAIL = `${NS_DEVICE}/saveDetail`;
+const GET_RFID = `${NS_DEVICE}/getRfid`;
 export{
     SET_LOADING,
     GET_DEVICE,
@@ -16,4 +17,5 @@ export{
     CREATE_DEVICE,
     GET_DETAIL_DEVICE,
     SAVE_DETAIL,
+    GET_RFID
 }

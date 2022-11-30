@@ -6,7 +6,8 @@ import {
   DEL_DEVICE,
   CREATE_DEVICE,
   GET_DETAIL_DEVICE,
-  SAVE_DETAIL
+  SAVE_DETAIL,
+  GET_RFID
 } from "./contants";
 export const setLoading = (payload) => {
   return {
@@ -100,3 +101,18 @@ export function asyncDeleteAction(dispatch) {
   };
 }
 
+export const getRfid = (payload, resolve) => {
+  return {
+    type: GET_RFID,
+    payload,
+    resolve
+  };
+};
+
+export function asyncGetRfidAction(dispatch) {
+  return function returnAsync(payload) {
+      return new Promise((resolve) =>
+          dispatch(getRfid(payload, resolve))
+      );
+  };
+}

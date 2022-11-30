@@ -4,12 +4,17 @@ import { Table, notification } from "antd";
 import { Excel } from "antd-table-saveas-excel";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { selectRfid } from "./store/selector";
+import { createStructuredSelector } from "reselect";
+import { compose } from "recompose";
+import { connect } from "react-redux";
 import moment from "moment";
+import { asyncScanRfidAction } from "./store/action";
 import "./index.css";
 
-import socketIOClient from "socket.io-client";
 import { Button } from "antd";
 const ScanPage = (props) => {
+  const { scanRfid } = props;
   const navigate = useNavigate();
   const columns = [
     {
@@ -105,29 +110,17 @@ const ScanPage = (props) => {
   const [isScan, setIsScan] = useState(true);
   useEffect(() => {
     const scanDevices = async () => {
-      const socket = await socketIOClient.connect(
-        `${process.env.REACT_APP_API}`
-      );
-      socket.emit("fromclient", { message: "scan" });
-      socket.on("scanFromServer", (dataGot) => {
-        if (dataGot) {
-          if (dataGot.success) {
-            if (
-              !listDevices.find(
-                (device) => device.rfidId === dataGot.data.rfidId
-              )
-            ) {
-              setListDevices([dataGot.data, ...listDevices]);
-            }
-          } else {
-            if (!listDevices.find((device) => device.rfidId === dataGot.data)) {
-              setListDevices([{ rfidId: dataGot.data }, ...listDevices]);
-            }
-          }
-          setIsScan(!isScan);
-          socket.disconnect();
+      const res = await scanRfid();
+      if (res.success) {
+        if (!listDevices.find((device) => device.rfidId === res.data.rfidId)) {
+          setListDevices([res.data, ...listDevices]);
         }
-      });
+      } else {
+        if (!listDevices.find((device) => device.rfidId === res.rfidId)) {
+          setListDevices([{ rfidId: res.rfidId }, ...listDevices]);
+        }
+      }
+      setIsScan(!isScan);
     };
     scanDevices();
   }, [isScan]);
@@ -258,5 +251,11 @@ const ScanPage = (props) => {
     </div>
   );
 };
-
-export default ScanPage;
+const mapStateToProps = createStructuredSelector({
+  rfidTag: selectRfid,
+});
+const mapDispatchToProps = (dispatch) => ({
+  scanRfid: (payload) => asyncScanRfidAction(dispatch)(payload),
+});
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default compose(withConnect)(ScanPage);

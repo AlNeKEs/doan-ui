@@ -4,7 +4,8 @@ import {
   CREATE_DEVICE,
   UPDATE_DEVICE,
   DEL_DEVICE,
-  GET_DETAIL_DEVICE
+  GET_DETAIL_DEVICE,
+  GET_RFID
 } from "./contants";
 import {
   getDevices,
@@ -12,6 +13,7 @@ import {
   getDetailDevice,
   updateDevice,
   delDevice,
+  addRfid
 } from "../../../api";
 import { saveDevice, setLoading, saveDetail } from "./action";
 
@@ -69,6 +71,16 @@ function* deleteDeviceSaga({ payload, resolve }) {
       yield put(setLoading(false));
     }
   }
+  function* getRfidSaga({ payload, resolve }) {
+    try {
+      yield put(setLoading(true));
+      const response = yield call(addRfid);
+      resolve(response.data);
+      yield put(setLoading(false));
+    } catch (e) {
+      yield put(setLoading(false));
+    }
+  }
 
 export function* myDevice() {
   yield takeLatest(GET_DEVICE, getDeviceSaga);
@@ -76,4 +88,5 @@ export function* myDevice() {
   yield takeLatest(UPDATE_DEVICE, updateDeviceSaga);
   yield takeLatest(DEL_DEVICE, deleteDeviceSaga);
   yield takeLatest(GET_DETAIL_DEVICE, getDetailDeviceSaga);
+  yield takeLatest(GET_RFID, getRfidSaga);
 }

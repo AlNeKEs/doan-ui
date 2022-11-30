@@ -14,13 +14,13 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import socketIOClient from "socket.io-client";
 import {
   getDevices,
   asyncCreateDeviceAction,
   asyncUpdateAction,
   asyncDeleteAction,
   asyncGetDetailAction,
+  asyncGetRfidAction,
 } from "./store/action";
 import { selectLoading, selectDevice, selectDetail } from "./store/selector";
 import { createStructuredSelector } from "reselect";
@@ -42,6 +42,7 @@ const Home = (props) => {
     deleteDevice,
     devices,
     getAllDevices,
+    getRfid,
   } = props;
   const columns = [
     {
@@ -172,18 +173,22 @@ const Home = (props) => {
   const [rfidDisable, setRfidDisable] = useState(false);
 
   //open modal when click Create button
-  const showModal = () => {
+  const showModal = async () => {
     setOpen(true);
     formModal.resetFields();
     setCreateBtn(true);
     setRfidDisable(false);
-    setIsConnect(true);
+    const data = await getRfid();
+    if(data.success){
+      formModal.setFieldsValue({
+        rfidId: data.rfidId,
+      });
+    }
   };
   //close model
   const handleCancel = () => {
     setOpen(false);
     setCreateBtn(true);
-    setIsConnect(false);
   };
 
   //load data to modal update
@@ -247,7 +252,6 @@ const Home = (props) => {
     }
     setSubmit(!isSubmit);
     setOpen(false);
-    setIsConnect(false);
   };
 
   //delete device
@@ -297,26 +301,6 @@ const Home = (props) => {
     const params = { ...paginatios, paging };
     setPaginatios(params);
   };
-
-  // get ID from RFID reader
-  const [isConnect, setIsConnect] = useState(false);
-  const addDevice = async () => {
-    if (isConnect === true) {
-      const socket = await socketIOClient.connect(
-        `${process.env.REACT_APP_API}`
-      );
-      socket.emit("fromclient", { message: "add" });
-      socket.on("addFromServer", (dataGot) => {
-        if (dataGot) {
-          formModal.setFieldsValue({
-            rfidId: dataGot.rfidId,
-          });
-          socket.disconnect();
-        }
-      });
-    }
-  };
-  addDevice();
 
   // navigate to Scan Page
   const scanDevice = () => {
@@ -571,6 +555,7 @@ const mapDispatchToProps = (dispatch) => ({
   createDevice: (payload) => asyncCreateDeviceAction(dispatch)(payload),
   updateDevice: (payload) => asyncUpdateAction(dispatch)(payload),
   deleteDevice: (payload) => asyncDeleteAction(dispatch)(payload),
+  getRfid: (payload) => asyncGetRfidAction(dispatch)(payload),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

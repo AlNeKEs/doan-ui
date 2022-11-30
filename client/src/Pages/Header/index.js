@@ -58,7 +58,7 @@ const Header = (props) => {
           onClick={openModal}
           className="header-btn"
         >
-          createUser
+          Create User
         </Button>
       ),
     },
@@ -121,7 +121,7 @@ const Header = (props) => {
         placement="bottomRight"
       >
         <Button style={{ backgroundColor: "#62aeff", color: "white" }}>
-          user
+          User
         </Button>
       </Dropdown>
 

@@ -46,3 +46,21 @@ export const getDetailDevice = (deviceID) => {
     }
   );
 };
+
+//rfid
+export const scanRfid = () => {
+  return request(
+    `${process.env.REACT_APP_API}/api/rfid/scan`,
+    {
+      method: "GET",
+    }
+  );
+};
+export const addRfid = () => {
+  return request(
+    `${process.env.REACT_APP_API}/api/rfid/add`,
+    {
+      method: "GET",
+    }
+  );
+};
