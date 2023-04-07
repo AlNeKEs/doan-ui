@@ -112,7 +112,6 @@ const Header = (props) => {
           Ứng dụng quản lí thông tin thiết bị với công nghệ RFID trên hệ thống
           MongoDB
         </h3>
-        <h4>Giảng viên hướng dẫn: Ths.Trương Bá Phúc</h4>
       </div>
       <Dropdown
         menu={{
